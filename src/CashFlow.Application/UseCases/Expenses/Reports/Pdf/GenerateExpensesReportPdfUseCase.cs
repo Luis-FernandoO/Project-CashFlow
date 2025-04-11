@@ -2,6 +2,7 @@
 using CashFlow.Application.UseCases.Expenses.Reports.Pdf.Fonts;
 using CashFlow.Domain.Reports;
 using CashFlow.Domain.Repositories.Expenses;
+using Microsoft.IdentityModel.Logging;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
@@ -53,6 +54,26 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
             row.Cells[3].VerticalAlignment = VerticalAlignment.Center;
 
 
+            row = table.AddRow();
+            row.Height = 25;
+            row.Cells[0].AddParagraph(item.DateExpense.ToString("D"));
+            row.Cells[0].Format.Font = new Font { Name = FontHelper.WORKSANS_REGULAR, Size = 12, Color = ColorHelper.BLACK };
+            row.Cells[0].Shading.Color = ColorHelper.GREEN_DARK;
+            row.Cells[0].VerticalAlignment = VerticalAlignment.Center;
+            row.Cells[0].Format.LeftIndent = 10;
+
+            row.Cells[1].AddParagraph(item.DateExpense.ToString("t"));
+            row.Cells[1].Format.Font = new Font { Name = FontHelper.WORKSANS_REGULAR, Size = 12, Color = ColorHelper.BLACK };
+            row.Cells[1].Shading.Color = ColorHelper.GREEN_DARK;
+            row.Cells[1].VerticalAlignment = VerticalAlignment.Center;
+
+            row.Cells[3].AddParagraph($"{CURRENCY_SYMBOL} -{item.Amount}");
+            row.Cells[3].Format.Font = new Font { Name = FontHelper.WORKSANS_REGULAR, Size = 14, Color = ColorHelper.BLACK };
+            row.Cells[3].Shading.Color = ColorHelper.WHITE;
+            row.Cells[3].VerticalAlignment = VerticalAlignment.Center;
+
+
+            //ESPAÇAMENTO ENTRE LINHAS DA TABELA
             row = table.AddRow();
             row.Height = 30;
             row.Borders.Visible = false;
