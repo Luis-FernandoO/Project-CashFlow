@@ -6,7 +6,6 @@ using CashFlow.Application.UseCases.Expenses.Update;
 using CashFlow.Commnication.Requests;
 using CashFlow.Commnication.Responses;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace CashFlow.API.Controllers;
 

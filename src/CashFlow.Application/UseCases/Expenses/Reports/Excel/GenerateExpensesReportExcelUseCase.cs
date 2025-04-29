@@ -1,12 +1,7 @@
-﻿
-
-using CashFlow.Commnication.Enums;
+﻿using CashFlow.Domain.Extensions;
 using CashFlow.Domain.Reports;
 using CashFlow.Domain.Repositories.Expenses;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using DocumentFormat.OpenXml.Office2016.Drawing.Command;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace CashFlow.Application.UseCases.Expenses.Reports.Excel;
 
@@ -40,7 +35,7 @@ public class GenerateExpensesReportExcelUseCase : IGenerateExpenseReportExcelUse
         {
             worksheet.Cell($"A{line}").Value = item.Title;
             worksheet.Cell($"B{line}").Value = item.DateExpense;
-            worksheet.Cell($"C{line}").Value = ConvertPaymentType(item.PaymentType);
+            worksheet.Cell($"C{line}").Value = item.PaymentType.PaymentTypeToString();
             worksheet.Cell($"D{line}").Value = item.Amount;
             worksheet.Cell($"D{line}").Style.NumberFormat.Format = $"-{CURRENCY_SYMBOL} #,##0.00";
             worksheet.Cell($"E{line}").Value = item.DescriptionExpense;
@@ -55,18 +50,6 @@ public class GenerateExpensesReportExcelUseCase : IGenerateExpenseReportExcelUse
     
         return file.ToArray();
 
-    }
-
-    private string ConvertPaymentType(PaymentType payment)
-    {
-        return payment switch
-        {
-            PaymentType.Cash =>"Dinheiro",
-            PaymentType.CreditCard => "Cartão de Crédito",
-            PaymentType.DebitCard => "Cartão de Débito",
-            PaymentType.EletronicTransfer => "Transferência Eletrônica",
-            _ => string.Empty
-        };
     }
     private void InsiderHeader(IXLWorksheet worksheet)
     {

@@ -1,8 +1,8 @@
 ﻿using CashFlow.Application.UseCases.Expenses.Reports.Pdf.Colors;
 using CashFlow.Application.UseCases.Expenses.Reports.Pdf.Fonts;
+using CashFlow.Domain.Extensions;
 using CashFlow.Domain.Reports;
 using CashFlow.Domain.Repositories.Expenses;
-using Microsoft.IdentityModel.Logging;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
@@ -14,6 +14,7 @@ namespace CashFlow.Application.UseCases.Expenses.Reports.Pdf;
 public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCase
 {
     private const string CURRENCY_SYMBOL = "R$";
+    private const int HEIGHT_ROW_EXPENSE_TABLE = 25;
     private readonly IExpensesReadOnlyRepository _repository;
     public GenerateExpensesReportPdfUseCase(IExpensesReadOnlyRepository repository)
     {
@@ -39,45 +40,45 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
         {
             var table = CreateExpenseTable(page);
             var row = table.AddRow();
-            row.Height = 25;
+            row.Height = HEIGHT_ROW_EXPENSE_TABLE;
             
-            row.Cells[0].AddParagraph(item.Title);
-            row.Cells[0].Format.Font = new Font { Name = FontHelper.RALEWAY_BLACK, Size = 14, Color = ColorHelper.BLACK};
-            row.Cells[0].Shading.Color = ColorHelper.RED_LIGHT;
-            row.Cells[0].VerticalAlignment = VerticalAlignment.Center;
-            row.Cells[0].MergeRight = 2;
-            row.Cells[0].Format.LeftIndent = 10;
+            AddExpenseTitle(row.Cells[0], item.Title);
 
-            row.Cells[3].AddParagraph(ResourceReportGenerationMessages.AMOUNT);
-            row.Cells[3].Format.Font = new Font { Name = FontHelper.RALEWAY_BLACK, Size = 14, Color = ColorHelper.WHITE };
-            row.Cells[3].Shading.Color = ColorHelper.RED_DARK;
-            row.Cells[3].VerticalAlignment = VerticalAlignment.Center;
+            AddHeaderForAmount(row.Cells[3]);
 
 
-            row = table.AddRow();
-            row.Height = 25;
+             row = table.AddRow();
+            row.Height = HEIGHT_ROW_EXPENSE_TABLE;
             row.Cells[0].AddParagraph(item.DateExpense.ToString("D"));
-            row.Cells[0].Format.Font = new Font { Name = FontHelper.WORKSANS_REGULAR, Size = 12, Color = ColorHelper.BLACK };
-            row.Cells[0].Shading.Color = ColorHelper.GREEN_DARK;
-            row.Cells[0].VerticalAlignment = VerticalAlignment.Center;
+            SetStyleBaseForExpenseInformation(row.Cells[0]);
             row.Cells[0].Format.LeftIndent = 10;
 
             row.Cells[1].AddParagraph(item.DateExpense.ToString("t"));
-            row.Cells[1].Format.Font = new Font { Name = FontHelper.WORKSANS_REGULAR, Size = 12, Color = ColorHelper.BLACK };
-            row.Cells[1].Shading.Color = ColorHelper.GREEN_DARK;
-            row.Cells[1].VerticalAlignment = VerticalAlignment.Center;
+            SetStyleBaseForExpenseInformation(row.Cells[1]);
 
-            row.Cells[3].AddParagraph($"{CURRENCY_SYMBOL} -{item.Amount}");
-            row.Cells[3].Format.Font = new Font { Name = FontHelper.WORKSANS_REGULAR, Size = 14, Color = ColorHelper.BLACK };
-            row.Cells[3].Shading.Color = ColorHelper.WHITE;
-            row.Cells[3].VerticalAlignment = VerticalAlignment.Center;
+            row.Cells[2].AddParagraph(item.PaymentType.PaymentTypeToString());
+            SetStyleBaseForExpenseInformation(row.Cells[2]);
+
+            AddAmountForExpense(row.Cells[3], item.Amount);
+
+            if (!string.IsNullOrWhiteSpace(item.DescriptionExpense))
+            {
+                var descriptionRow = table.AddRow();
+                descriptionRow.Height = HEIGHT_ROW_EXPENSE_TABLE;
+
+                descriptionRow.Cells[0].AddParagraph(item.DescriptionExpense);
+                descriptionRow.Cells[0].Format.Font = new Font { Name = FontHelper.WORKSANS_REGULAR, Size = 10, Color = ColorHelper.BLACK };
+                descriptionRow.Cells[0].Shading.Color = ColorHelper.GREEN_LIGHT;
+                descriptionRow.Cells[0].VerticalAlignment = VerticalAlignment.Center;
+                descriptionRow.Cells[0].MergeRight = 2;
+                descriptionRow.Cells[0].Format.LeftIndent = 10;
+
+                row.Cells[3].MergeDown = 1;
+            }
 
 
             //ESPAÇAMENTO ENTRE LINHAS DA TABELA
-            row = table.AddRow();
-            row.Height = 30;
-            row.Borders.Visible = false;
-
+            AddWhiteSpace(table);
         }
         return RenderDocument(document);
     }
@@ -92,7 +93,6 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
         style!.Font.Name = FontHelper.RALEWAY_REGULAR;
         return document;
     }
-
     private Section CreatePage(Document document)
     {
         var section = document.AddSection();
@@ -106,7 +106,6 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
         return section;
 
     }
-
     private void CreateHeaderWithProfilePhotoAndName(Section page)
     {
         var table = page.AddTable();
@@ -140,7 +139,6 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
 
         paragraph.AddFormattedText($"{CURRENCY_SYMBOL} {totalExpenses}", new Font { Name = FontHelper.WORKSANS_BLACK, Size = 50 });
     }
-
     private Table CreateExpenseTable(Section page)
     {
         var table = page.AddTable();
@@ -151,6 +149,42 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
         table.AddColumn("120").Format.Alignment = ParagraphAlignment.Right;
 
         return table;
+    }
+    private void AddExpenseTitle(Cell cell, string title)
+    {
+       cell.AddParagraph(title);
+       cell.Format.Font = new Font { Name = FontHelper.RALEWAY_BLACK, Size = 14, Color = ColorHelper.BLACK };
+       cell.Shading.Color = ColorHelper.RED_LIGHT;
+       cell.VerticalAlignment = VerticalAlignment.Center;
+       cell.MergeRight = 2;
+       cell.Format.LeftIndent = 10;
+
+    }
+    private void AddHeaderForAmount(Cell cell) 
+    {
+        cell.AddParagraph(ResourceReportGenerationMessages.AMOUNT);
+        cell.Format.Font = new Font { Name = FontHelper.RALEWAY_BLACK, Size = 14, Color = ColorHelper.WHITE };
+        cell.Shading.Color = ColorHelper.RED_DARK;
+        cell.VerticalAlignment = VerticalAlignment.Center;
+    }
+    private void SetStyleBaseForExpenseInformation(Cell cell)
+    {
+        cell.Format.Font = new Font { Name = FontHelper.WORKSANS_REGULAR, Size = 12, Color = ColorHelper.BLACK };
+        cell.Shading.Color = ColorHelper.GREEN_DARK;
+        cell.VerticalAlignment = VerticalAlignment.Center;
+    }
+    private void AddAmountForExpense(Cell cell, decimal amount)
+    {
+        cell.AddParagraph($"{CURRENCY_SYMBOL} {amount}");
+        cell.Format.Font = new Font { Name = FontHelper.WORKSANS_REGULAR, Size = 14, Color = ColorHelper.BLACK  };
+        cell.Shading.Color = ColorHelper.WHITE;
+        cell.VerticalAlignment = VerticalAlignment.Center;
+    }
+    private void AddWhiteSpace(Table table)
+    {
+        var row = table.AddRow();
+        row.Height = 30;
+        row.Borders.Visible = false;
     }
     private byte[] RenderDocument(Document document)
     {
