@@ -1,4 +1,5 @@
-﻿using CashFlow.Commnication.Enums;
+﻿
+using CashFlow.Commnication.Enums;
 
 namespace CashFlow.Commnication.Requests;
 
@@ -9,5 +10,5 @@ public class RequestExpenseJson
     public DateTime Date { get; set; }  
     public decimal Amount { get; set; }
     public PaymentType PaymentType { get; set; }
-
+    
 }
