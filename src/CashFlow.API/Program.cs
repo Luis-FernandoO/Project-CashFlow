@@ -2,6 +2,7 @@ using CashFlow.API.Filters;
 using CashFlow.Application;
 using CashFlow.Infrastructure;
 using CashFlow.Infrastructure.Migrations;
+using CashFlow.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -80,7 +81,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await MigrateDataBase();
+if (!builder.Configuration.IsTextEnviroment())
+{
+    await MigrateDataBase();
+}
 
 app.Run();
 
@@ -89,3 +93,4 @@ async Task MigrateDataBase()
     await using var scope = app.Services.CreateAsyncScope();
     await DataBaseMigration.MigrateDataBase(scope.ServiceProvider);
 }
+public partial class Program { }

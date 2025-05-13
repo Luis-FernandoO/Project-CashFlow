@@ -62,7 +62,7 @@ public class RegisterUserUseCase : IRegisterUserUseCase
 
         if(emailExist)
         {
-            result.Errors.Add(new ValidationFailure("Email", "Email já existe"));
+            result.Errors.Add(new ValidationFailure(string.Empty, "Email já existe"));
         }
 
         if (!result.IsValid)
