@@ -23,6 +23,7 @@ internal class JwtTokenGenerator : IAccesTokenGenerator
         {
             new Claim(ClaimTypes.Name, user.Name),
             new Claim(ClaimTypes.Sid, user.UserIdentifier.ToString()),
+            new Claim(ClaimTypes.Role, user.Role),
         };
 
 

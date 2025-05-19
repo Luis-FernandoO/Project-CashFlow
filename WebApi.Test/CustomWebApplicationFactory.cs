@@ -1,5 +1,6 @@
 ﻿using CashFlow.Domain.Entities;
 using CashFlow.Domain.Security.Cryptography;
+using CashFlow.Domain.Security.Tokens;
 using CashFlow.Infrastructure.DataAcess;
 using CommonTestUtilities.Entities;
 using DocumentFormat.OpenXml.Office.CustomXsn;
@@ -15,6 +16,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
     private User _user;
     private string _password;
+    private string _token;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -33,12 +35,17 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 var passwordEncripter = scope.ServiceProvider.GetRequiredService<IPasswordEncripter>();
 
                 StartDataBase(dbContext, passwordEncripter);
+
+                var tokenGenerator = scope.ServiceProvider.GetRequiredService<IAccesTokenGenerator>();
+                _token = tokenGenerator.Generate(_user);
             });
     }
     
     public string GetEmail() => _user.Email;
     public string GetName() => _user.Name;
     public string GetPassword() => _password;
+    public string GetToken() => _token;
+
     private void StartDataBase(CashFlowDbContext context, IPasswordEncripter passwordEncripter)
     {
         _user = UserBuilder.Build();
@@ -49,5 +56,4 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         context.Users.Add(_user);
         context.SaveChanges();
     }
-
 }

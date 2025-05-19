@@ -5,13 +5,11 @@ using System.Net.Http.Json;
 using System.Text.Json;
 
 namespace WebApi.Test.Users.Register;
-public class RegisterUserTest : IClassFixture<CustomWebApplicationFactory>
+public class RegisterUserTest : CashFlowClassFixture
 {
-    private readonly HttpClient _httpClient;
     private const string METHOD = "api/User";
-    public RegisterUserTest(CustomWebApplicationFactory webApplicationFactory)
+    public RegisterUserTest(CustomWebApplicationFactory webApplicationFactory) : base(webApplicationFactory)
     {
-        _httpClient = webApplicationFactory.CreateClient();    
     }
 
     [Fact]
