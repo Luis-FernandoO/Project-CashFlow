@@ -16,7 +16,7 @@ public class RegisterUserTest : CashFlowClassFixture
     public async Task Success()
     {
         var request = RequestRegisterUserJsonBuilder.Build();
-        var result = await _httpClient.PostAsJsonAsync(METHOD,request);
+        var result = await DoPost(METHOD,request);
         result.StatusCode.Should().Be(HttpStatusCode.Created);
 
         var body = await result.Content.ReadAsStreamAsync();
@@ -33,7 +33,7 @@ public class RegisterUserTest : CashFlowClassFixture
 
         request.Name = string.Empty;
 
-        var result = await _httpClient.PostAsJsonAsync(METHOD, request);
+        var result = await DoPost(METHOD, request);
         result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var body = await result.Content.ReadAsStreamAsync();    
         var response = await JsonDocument.ParseAsync(body);
@@ -49,7 +49,7 @@ public class RegisterUserTest : CashFlowClassFixture
     {
         var request = RequestRegisterUserJsonBuilder.Build();
         request.Email = string.Empty;
-        var result = await _httpClient.PostAsJsonAsync(METHOD, request);
+        var result = await DoPost(METHOD, request);
         result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         var body = await result.Content.ReadAsStreamAsync();
         var response = await JsonDocument.ParseAsync(body);

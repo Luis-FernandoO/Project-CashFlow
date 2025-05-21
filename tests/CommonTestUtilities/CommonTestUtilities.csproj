@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\CashFlow.Application\CashFlow.Application.csproj" />
     <ProjectReference Include="..\..\src\CashFlow.Commnication\CashFlow.Commnication.csproj" />
+    <ProjectReference Include="..\..\src\CashFlow.Domain\CashFlow.Domain.csproj" />
   </ItemGroup>
 
 </Project>

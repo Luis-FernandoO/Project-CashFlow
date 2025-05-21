@@ -4,7 +4,6 @@ using CashFlow.Domain.Repositories.Expenses;
 using CashFlow.Domain.Services.LoggedUser;
 using CashFlow.Exception;
 using CashFlow.Exception.ExceptionsBase;
-using Microsoft.Extensions.Logging;
 
 namespace CashFlow.Application.UseCases.Expenses.GetById;
 

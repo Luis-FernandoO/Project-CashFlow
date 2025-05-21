@@ -11,12 +11,28 @@ public class CashFlowClassFixture : IClassFixture<CustomWebApplicationFactory>
         _httpClient = webApplicationFactory.CreateClient();
     }
 
-    protected async Task DoPost(string requestUri, object request, string? token = "")
+    protected async Task<HttpResponseMessage> DoPost(string requestUri, object request, string token = "")
     {
         AuthorizeRequest(token);
-        var result = await _httpClient.PostAsJsonAsync(requestUri, request);
+
+        return await _httpClient.PostAsJsonAsync(requestUri, request);
+    }
+    protected async Task<HttpResponseMessage> DoPut(string requestUri, object request, string token)
+    {
+        AuthorizeRequest(token);
+        return await _httpClient.PutAsJsonAsync(requestUri, request);
     }
 
+    protected async Task<HttpResponseMessage> DoGet(string requestUri , string token)
+    {
+        AuthorizeRequest(token);
+        return await _httpClient.GetAsync(requestUri);
+    }
+    protected async Task<HttpResponseMessage> DoDelete(string requestUri, string token)
+    {
+        AuthorizeRequest(token);
+        return await _httpClient.DeleteAsync(requestUri);
+    }
     private void AuthorizeRequest(string token)
     {
         if (string.IsNullOrWhiteSpace(token))

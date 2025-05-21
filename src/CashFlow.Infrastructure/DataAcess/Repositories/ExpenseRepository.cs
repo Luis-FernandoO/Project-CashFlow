@@ -56,8 +56,8 @@ internal class ExpenseRepository : IExpensesReadOnlyRepository, IExpensesWriteOn
         return await _context
             .Expenses
             .AsNoTracking()
-            .Where(expense => expense.UserId == user.Id && expense.DateExpense >= startDate && expense.DateExpense <= endDate)
-            .OrderBy(x => x.DateExpense)
+            .Where(expense => expense.UserId == user.Id && expense.Date >= startDate && expense.Date <= endDate)
+            .OrderBy(x => x.Date)
             .ThenBy(x => x.Title)
             .ToListAsync();
 

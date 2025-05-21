@@ -1,10 +1,7 @@
-﻿using CashFlow.Application.UseCases.Expenses.Delete;
-using CashFlow.Application.UseCases.Expenses.Reports.Excel;
+﻿using CashFlow.Application.UseCases.Expenses.Reports.Excel;
 using CashFlow.Application.UseCases.Expenses.Reports.Pdf;
-using CashFlow.Commnication.Enums;
-using CashFlow.Commnication.Requests;
+using CashFlow.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 

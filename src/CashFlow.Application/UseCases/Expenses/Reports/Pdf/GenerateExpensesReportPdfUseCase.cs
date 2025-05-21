@@ -56,11 +56,11 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
 
              row = table.AddRow();
             row.Height = HEIGHT_ROW_EXPENSE_TABLE;
-            row.Cells[0].AddParagraph(item.DateExpense.ToString("D"));
+            row.Cells[0].AddParagraph(item.Date.ToString("D"));
             SetStyleBaseForExpenseInformation(row.Cells[0]);
             row.Cells[0].Format.LeftIndent = 10;
 
-            row.Cells[1].AddParagraph(item.DateExpense.ToString("t"));
+            row.Cells[1].AddParagraph(item.Date.ToString("t"));
             SetStyleBaseForExpenseInformation(row.Cells[1]);
 
             row.Cells[2].AddParagraph(item.PaymentType.PaymentTypeToString());
@@ -68,12 +68,12 @@ public class GenerateExpensesReportPdfUseCase : IGenerateExpensesReportPdfUseCas
 
             AddAmountForExpense(row.Cells[3], item.Amount);
 
-            if (!string.IsNullOrWhiteSpace(item.DescriptionExpense))
+            if (!string.IsNullOrWhiteSpace(item.Description))
             {
                 var descriptionRow = table.AddRow();
                 descriptionRow.Height = HEIGHT_ROW_EXPENSE_TABLE;
 
-                descriptionRow.Cells[0].AddParagraph(item.DescriptionExpense);
+                descriptionRow.Cells[0].AddParagraph(item.Description);
                 descriptionRow.Cells[0].Format.Font = new Font { Name = FontHelper.WORKSANS_REGULAR, Size = 10, Color = ColorHelper.BLACK };
                 descriptionRow.Cells[0].Shading.Color = ColorHelper.GREEN_LIGHT;
                 descriptionRow.Cells[0].VerticalAlignment = VerticalAlignment.Center;

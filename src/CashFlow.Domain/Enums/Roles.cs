@@ -1,4 +1,4 @@
-﻿namespace CashFlow.Commnication.Enums;
+﻿namespace CashFlow.Domain.Enums;
 
 public static class Roles
 {

@@ -1,4 +1,4 @@
-﻿using CashFlow.Commnication.Enums;
+﻿using CashFlow.Domain.Enums;
 
 namespace CashFlow.Domain.Entities;
 

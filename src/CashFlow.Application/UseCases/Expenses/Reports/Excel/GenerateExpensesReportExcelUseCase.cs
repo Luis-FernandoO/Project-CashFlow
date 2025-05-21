@@ -40,11 +40,11 @@ public class GenerateExpensesReportExcelUseCase : IGenerateExpenseReportExcelUse
         foreach(var item in expenses)
         {
             worksheet.Cell($"A{line}").Value = item.Title;
-            worksheet.Cell($"B{line}").Value = item.DateExpense;
+            worksheet.Cell($"B{line}").Value = item.Date;
             worksheet.Cell($"C{line}").Value = item.PaymentType.PaymentTypeToString();
             worksheet.Cell($"D{line}").Value = item.Amount;
             worksheet.Cell($"D{line}").Style.NumberFormat.Format = $"-{CURRENCY_SYMBOL} #,##0.00";
-            worksheet.Cell($"E{line}").Value = item.DescriptionExpense;
+            worksheet.Cell($"E{line}").Value = item.Description;
 
             line++;
         }

@@ -1,4 +1,4 @@
-﻿using CashFlow.Commnication.Enums;
+﻿using CashFlow.Domain.Enums;
 
 namespace CashFlow.Domain.Entities;
 
@@ -6,8 +6,8 @@ public class Expense
 {
     public long Id { get; set; }
     public string Title { get; set; } = string.Empty;
-    public string? DescriptionExpense { get; set; } = string.Empty;
-    public DateTime DateExpense { get; set; }
+    public string? Description { get; set; } = string.Empty;
+    public DateTime Date { get; set; }
     public decimal Amount { get; set; }
     public PaymentType PaymentType { get; set; }
     public long UserId { get; set; }

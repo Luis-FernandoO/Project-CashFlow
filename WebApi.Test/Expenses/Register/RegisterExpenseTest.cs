@@ -2,11 +2,9 @@
 using CommonTestUtilities.Requests;
 using FluentAssertions;
 using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace WebApi.Test.Register;
+namespace WebApi.Test.Expenses.Register;
 public class RegisterExpenseTest : CashFlowClassFixture
 {
     private const string METHOD = "api/Expenses";
@@ -14,15 +12,15 @@ public class RegisterExpenseTest : CashFlowClassFixture
 
     public RegisterExpenseTest(CustomWebApplicationFactory webApplicationFactory): base(webApplicationFactory)
     {
-        _token = webApplicationFactory.GetToken();
+        _token = webApplicationFactory.User_Member.GetToken();
     }
 
     [Fact]
     public async Task Success()
     {
-        var request = RequestRegisterExpenseJsonBuilder.Build();
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
-        var result = await _httpClient.PostAsJsonAsync(METHOD, request);
+        var request = RequestExpenseJsonBuilder.Build();
+
+        var result = await DoPost(requestUri: METHOD, request: request,token: _token);
 
         result.StatusCode.Should().Be(HttpStatusCode.Created);
 
@@ -34,14 +32,13 @@ public class RegisterExpenseTest : CashFlowClassFixture
     }
 
     [Fact]
-    public async Task Error_Title_Name()
+    public async Task Error_Title_Empty()
     {
-        var request = RequestRegisterExpenseJsonBuilder.Build();
+        var request = RequestExpenseJsonBuilder.Build();
         request.Title = string.Empty;
 
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _token);
 
-        var result = await _httpClient.PostAsJsonAsync(METHOD, request);
+        var result = await DoPost(requestUri: METHOD, request: request, token: _token);
 
         result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
@@ -52,7 +49,5 @@ public class RegisterExpenseTest : CashFlowClassFixture
         var errors = response.RootElement.GetProperty("errorMessages").EnumerateArray();
         errors.Should().HaveCount(1).And.Contain(error => error.GetString()!.Equals(ResourceErrorsMessages.TITULO_OBRIGATORIO));
     }
-
-
 
 }
