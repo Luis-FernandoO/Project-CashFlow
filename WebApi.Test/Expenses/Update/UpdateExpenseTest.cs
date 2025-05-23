@@ -16,7 +16,7 @@ public class UpdateExpenseTest : CashFlowClassFixture
     public UpdateExpenseTest(CustomWebApplicationFactory webApplicationFactory) : base(webApplicationFactory)
 	{
         _token = webApplicationFactory.User_Member.GetToken();
-        _expenseId = webApplicationFactory.Expense_MemberTeam.GetExpenseId();
+        _expenseId = webApplicationFactory.Expense_Member.GetId();
     }
 
     [Fact]

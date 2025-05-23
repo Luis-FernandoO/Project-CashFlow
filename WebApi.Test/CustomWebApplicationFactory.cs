@@ -17,8 +17,8 @@ namespace WebApi.Test;
 
 public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 {
-    public ExpenseIdentityManager Expense_AdminTeam{ get; private set; } = default!;
-    public ExpenseIdentityManager Expense_MemberTeam { get; private set; } = default!;
+    public ExpenseIdentityManager Expense_Admin { get; private set; } = default!;
+    public ExpenseIdentityManager Expense_Member { get; private set; } = default!;
     public UserIdentityManager User_Member { get; private set; } = default!;
     public UserIdentityManager User_Admin { get; private set; } = default!;
 
@@ -48,14 +48,13 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
         var userTeamMember = AddUsersMember(context, passwordEncripter, accesTokenGenerator);
         var expenseMemberTeam = AddExpenses(context, userTeamMember,expenseId: 1);
-        Expense_MemberTeam = new ExpenseIdentityManager(expenseMemberTeam);
+        Expense_Member = new ExpenseIdentityManager(expenseMemberTeam);
 
         var userAdmin = AddUserAdmin(context, passwordEncripter, accesTokenGenerator);
         var expenseAdminTeam = AddExpenses(context, userAdmin, expenseId: 2);
-        Expense_AdminTeam = new ExpenseIdentityManager(expenseAdminTeam);
+        Expense_Admin = new ExpenseIdentityManager(expenseAdminTeam);
 
         context.SaveChanges();
-
     }
 
     private User AddUsersMember(CashFlowDbContext context,

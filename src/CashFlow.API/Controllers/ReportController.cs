@@ -12,10 +12,10 @@ namespace CashFlow.API.Controllers;
 [Authorize(Roles = Roles.ADMIN)]
 public class ReportController : ControllerBase
 {
-    [HttpGet("Excel")]
+    [HttpGet("excel")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> GetExcel([FromServices] IGenerateExpenseReportExcelUseCase useCase,[FromHeader] DateOnly month)
+    public async Task<IActionResult> GetExcel([FromServices] IGenerateExpenseReportExcelUseCase useCase, [FromQuery] DateOnly month)
     {
         byte[] files = await useCase.Execute(month);
 
@@ -25,10 +25,10 @@ public class ReportController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("PDF")]
+    [HttpGet("pdf")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> GetPdf([FromServices] IGenerateExpensesReportPdfUseCase useCase, [FromHeader] DateOnly month)
+    public async Task<IActionResult> GetPdf([FromServices] IGenerateExpensesReportPdfUseCase useCase, [FromQuery] DateOnly month)
     {
         byte[] files = await useCase.Execute(month);
         if (files.Length > 0)

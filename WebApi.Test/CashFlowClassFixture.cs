@@ -20,6 +20,7 @@ public class CashFlowClassFixture : IClassFixture<CustomWebApplicationFactory>
     protected async Task<HttpResponseMessage> DoPut(string requestUri, object request, string token)
     {
         AuthorizeRequest(token);
+
         return await _httpClient.PutAsJsonAsync(requestUri, request);
     }
 
